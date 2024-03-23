@@ -1,5 +1,5 @@
 const WeatherData = require('../models/weatherDataModel');
-
+const fs = require("fs");
 const getWeatherByCityName = async (req, res) => {
   const cityName = req.params.cityName;
 
@@ -9,6 +9,12 @@ const getWeatherByCityName = async (req, res) => {
     // res.status(200).json({ weatherData });
     // Example response when data is not found:
     // res.status(404).json({ message: 'Weather data not found for the given city' });
+    const weatherData = JSON.parse(fs.readFileSync(`./data/data.json`))
+    const dataByCityName = weatherData.find((el)=> el.cityName === cityName);
+    if(dataByCityName){
+      return res.status(200).json({"weatherData": dataByCityName});
+    }
+    return res.status(404).json({ message: 'Weather data not found for the given city' });
   } catch (error) {
     res
       .status(500)
@@ -25,6 +31,12 @@ const getWeatherByZipCode = async (req, res) => {
     // res.status(200).json({ weatherData });
     // Example response when data is not found:
     // res.status(404).json({ message: 'Weather data not found for the given zip code' });
+    const weatherData = JSON.parse(fs.readFileSync(`./data/data.json`))
+    const dataByCityName = weatherData.find((el)=> el.zipCode === zipCode);
+    if(dataByCityName){
+      return res.status(200).json({"weatherData": dataByCityName});
+    }
+    return res.status(404).json({ message: 'Weather data not found for the given zip code' });
   } catch (error) {
     res
       .status(500)
@@ -40,6 +52,11 @@ const postWeatherAlert = async (req, res) => {
     // TODO: Implement logic to post weather alert
     // Example response when alert is posted successfully:
     // res.status(201).json({ message: 'Weather alert posted successfully', alert: newAlert });
+    if(!cityName || !humidity || !weatherDescription || !temperature || !zipCode){
+      return res.status(400).json({message: "feilds are missing"});
+    }
+    const alert =  await WeatherData.create(req.body);
+    return res.status(201).json({ "message": "Weather alert posted successfully", alert});
   } catch (error) {
     res
       .status(500)
