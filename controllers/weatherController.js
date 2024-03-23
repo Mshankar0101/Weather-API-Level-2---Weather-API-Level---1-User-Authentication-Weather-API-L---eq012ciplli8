@@ -53,7 +53,7 @@ const postWeatherAlert = async (req, res) => {
     // Example response when alert is posted successfully:
     // res.status(201).json({ message: 'Weather alert posted successfully', alert: newAlert });
     if(!cityName || !humidity || !weatherDescription || !temperature || !zipCode){
-      return res.status(500).json({message: "feilds are missing"});
+      return res.status(500).json({message: "Internal server error"});
     }
     const alert =  await WeatherData.create(req.body);
     return res.status(201).json({ "message": "Weather alert posted successfully", alert});
