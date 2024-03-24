@@ -12,9 +12,9 @@ const getWeatherByCityName = async (req, res) => {
     const weatherData = JSON.parse(fs.readFileSync(`./data/data.json`))
     const dataByCityName = weatherData.find((el)=> el.cityName.toLowerCase().trim() === cityName.toLowerCase().trim());
     if(dataByCityName){
-      return res.status(200).json({"weatherData": dataByCityName});
+      return res.status(404).json({"weatherData": dataByCityName});
     }
-    return res.status(404).json({ message: 'Weather data not found for the given city' });
+    return res.status(200).json({ message: 'Weather data not found for the given city' });
   } catch (error) {
     res
       .status(500)
